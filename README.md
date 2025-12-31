@@ -81,7 +81,7 @@ For more details, see the [LICENSE](./License.md) file.
 
 ## Contact
 
-For permissions related to commercial use or any questions, please contact: Code With Goldencat (codingwithgoldencat@gmail.com)
+For permissions related to commercial use or any questions, please contact:(sayalikokane55@gmail.com)
 
 ## Contributions
 
