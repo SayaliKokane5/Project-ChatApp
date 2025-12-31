@@ -28,27 +28,46 @@ A real-time one to one chat web application built using Java 17, MySQL, Spring B
 
 1. **Clone the Repository**:
    ```sh
-   git clone https://github.com/Goldencat98/ChatApp.git
-   cd ChatApp
+   git clone https://github.com/SayaliKokane5/Project-ChatApp.git
+   cd Project-ChatApp
    ```
    
 2. Create MySQL database using [SQLScript](src/main/resources/static/sql-script/SQLScript.txt)
 
 3. Update MySQL password in [application.properties](src/main/resources/application.properties)
 
-4. **Build the Project**:
+4. **Build Docker Image**:
    ```sh
-   mvn clean install
+   docker build -t sayalikokane5/chatapp:1.0 .
+
    ```
 
-5. **Run the Application**:
+5. **Run Application Using Docker Compose**:
    ```sh
-   mvn spring-boot:run
+   Run Application Using Docker Compose
    ```
-
-6. **Access the Application**:
+6. **Check running containers:**
+  ```sh
+   docker ps
+   ```
+7. **Access the Application**:
    Open your browser and navigate to `http://localhost:8080`.
 
+8. **Access MySQL Database:**
+    ```sh
+   docker exec -it mysql bash
+    mysql -u root -p
+    Test@123
+    
+   SHOW DATABASES;
+   USE chatapp;
+   SHOW TABLES;
+   DESCRIBE messages;
+   SELECT * FROM users;
+
+   exit;
+
+   ```
 ## Usage
 
 - **Login**: Create a new account or securely log in using your existing credentials to access the platform.
