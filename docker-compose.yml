@@ -1,0 +1,51 @@
+version: "3.8"
+
+services:
+  database:
+    image: mysql:8
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: Test@123
+      MYSQL_DATABASE: chatapp
+    ports:
+      - "3306:3306"
+    networks:
+      - chatapp-network
+    volumes:
+      - chatapp-db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  backend:
+    image: sayalikokane5/chatapp:1.0
+    container_name: ChatApp
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/chatapp?useSSL=false&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: Test@123
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - chatapp-network
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8081/actuator/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    ports:
+      - "8081:8080"
+  
+
+networks:
+  chatapp-network:
+
+volumes:
+  chatapp-db:
+
