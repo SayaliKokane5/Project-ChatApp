@@ -92,6 +92,10 @@ Contributions are welcome! Feel free to open an issue or submit a pull request t
 ![Login Page](src/main/resources/static/screenshots/login_screenshot.png)
 ![Register Page](src/main/resources/static/screenshots/register_screenshot.png)
 ![Chat App Page](src/main/resources/static/screenshots/chatapp_screenshot.png)
+![Chat App Page](src/main/resources/static/screenshots/cmd-1.png)
+![Chat App Page](src/main/resources/static/screenshots/cmd-2.png)
+![Chat App Page](src/main/resources/static/screenshots/cmd-3.png)
+![Chat App Page](src/main/resources/static/screenshots/cmd-4.png)
 
 ## Future Enhancements
 
