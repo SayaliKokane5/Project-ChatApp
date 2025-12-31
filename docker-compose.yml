@@ -1,7 +1,5 @@
-version: "3.8"
-
 services:
-  database:
+  mysql:
     image: mysql:8
     container_name: mysql
     environment:
@@ -9,43 +7,43 @@ services:
       MYSQL_DATABASE: chatapp
     ports:
       - "3306:3306"
-    networks:
-      - chatapp-network
     volumes:
       - chatapp-db:/var/lib/mysql
+    networks:
+      - chatapp-network
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
       timeout: 5s
       retries: 3
       start_period: 30s
+    restart: always
 
-  backend:
+  chatapp:
     image: sayalikokane5/chatapp:1.0
-    container_name: ChatApp
+    container_name: chatapp
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/chatapp?useSSL=false&serverTimezone=UTC
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/chatapp?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: Test@123
     depends_on:
-      database:
+      mysql:
         condition: service_healthy
+    ports:
+      - "8080:8080"
     networks:
       - chatapp-network
-    restart: always
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8080/actuator/health || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 30s
-    ports:
-      - "8080:8080"
-  
-
-networks:
-  chatapp-network:
+    restart: always
 
 volumes:
   chatapp-db:
 
+networks:
+  chatapp-network:
+    driver: bridge
