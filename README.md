@@ -44,7 +44,7 @@ A real-time one to one chat web application built using Java 17, MySQL, Spring B
 
 5. **Run Application Using Docker Compose**:
    ```sh
-   Run Application Using Docker Compose
+   Docker Compose up --build
    ```
 6. **Check running containers:**
   ```sh
