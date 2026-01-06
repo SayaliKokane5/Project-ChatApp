@@ -1,0 +1,30 @@
+pipeline {
+    agent any
+    
+    stages {
+        
+        stage("code clone"){
+            steps{
+                git url: "https://github.com/SayaliKokane5/Project-ChatApp", branch: "devops"
+            }
+        }
+        
+        stage("Deploy using Docker Compose") {
+           steps {
+                sh '''
+                  docker compose down || true
+                  docker compose up -d --build
+                '''
+            }
+        }
+		
+	}
+	post {
+        success {
+            echo '✅ Application deployed successfully using Docker Compose'
+        }
+        failure {
+            echo '❌ Pipeline failed'
+        }
+    }
+}
