@@ -1,30 +1,87 @@
+@Library('Shared') _
 pipeline {
     agent any
     
+    environment{
+        SONAR_HOME = tool "Sonar"
+    }
+    
+    parameters {
+        string(name: 'DOCKER_TAG', defaultValue: '', description: 'Setting docker image for latest push')
+    }
+    
     stages {
         
-        stage("code clone"){
+        stage("Workspace cleanup"){
             steps{
-                git url: "https://github.com/SayaliKokane5/Project-ChatApp", branch: "devops"
+                script{
+                    cleanWs()
+                }
             }
         }
         
-        stage("Deploy using Docker Compose") {
-           steps {
-                sh '''
-                  docker compose down || true
-                  docker compose up -d --build
-                '''
+        stage('Git: Code Checkout') {
+            steps {
+                script{
+                    code_checkout("https://github.com/SayaliKokane5/Project-ChatApp.git","devops")
+                }
             }
         }
-		
-	}
-	post {
-        success {
-            echo '✅ Application deployed successfully using Docker Compose'
+        
+        stage("Trivy: Filesystem scan"){
+            steps{
+                script{
+                    trivy_scan()
+                }
+            }
         }
-        failure {
-            echo '❌ Pipeline failed'
+
+        stage("OWASP: Dependency check"){
+            steps{
+                script{
+                    owasp_dependency()
+                }
+            }
+        }
+        
+        stage("SonarQube: Code Analysis"){
+            steps{
+                script{
+                    sonarqube_analysis("Sonar","bankapp","bankapp")
+                }
+            }
+        }
+        
+        stage("SonarQube: Code Quality Gates"){
+            steps{
+                script{
+                    sonarqube_code_quality()
+                }
+            }
+        }
+
+        stage("Docker: Build Images"){
+            steps{
+                script{
+                    docker_build("chatapp","${params.DOCKER_TAG}","sayalikoakne5")
+                }
+            }
+        }
+        
+        stage("Docker: Push to DockerHub"){
+            steps{
+                script{
+                    docker_push("chatapp","${params.DOCKER_TAG}","sayalikoakne5")
+                }
+            }
+        }
+    }
+    post{
+        success{
+            archiveArtifacts artifacts: '*.xml', followSymlinks: false
+            build job: "ChatApp-CD", parameters: [
+                string(name: 'DOCKER_TAG', value: "${params.DOCKER_TAG}")
+            ]
         }
     }
 }
