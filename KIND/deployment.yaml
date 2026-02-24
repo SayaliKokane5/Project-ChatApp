@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chatapp-deployment
+  labels:
+    app: chatapp
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: chatapp
+  template:
+    metadata:
+      labels:
+        app: chatapp
+    spec:
+      containers:
+      - name: chatapp
+        image: sayalikokane5/chatapp:1.0
+        ports:
+        - containerPort: 8080
